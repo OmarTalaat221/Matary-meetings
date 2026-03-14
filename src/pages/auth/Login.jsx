@@ -154,7 +154,7 @@ const Login = () => {
       </div>
 
       {/* Right Side - Illustration */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-primary to-primary-light items-center justify-center p-12 relative overflow-hidden">
+      <div className="hidden lg:flex flex-1 bg-primary-dark items-center justify-center p-12 relative overflow-hidden">
         {/* Background Decoration */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
