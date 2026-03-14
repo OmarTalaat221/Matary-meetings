@@ -124,58 +124,14 @@ const Calendar = () => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className=" gap-6">
         {/* Calendar */}
-        <div className="col-span-2">
+        <div className="">
           <Card>
             <AntCalendar
               fullCellRender={fullCellRender}
               defaultValue={dayjs("2026-03-15")}
             />
-          </Card>
-        </div>
-
-        {/* Upcoming Off Days */}
-        <div>
-          <Card title="Upcoming Off Days" className="sticky top-6">
-            {upcomingOffDays.length === 0 ? (
-              <div className="text-center py-8 text-gray-400">
-                <CalendarOff size={32} className="mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No upcoming off days</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {upcomingOffDays.map((day) => (
-                  <div
-                    key={day.id}
-                    className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100"
-                  >
-                    <div>
-                      <p className="font-medium text-red-700">
-                        {dayjs(day.date).format("ddd, MMM D")}
-                      </p>
-                      <p className="text-sm text-red-600">{day.reason}</p>
-                    </div>
-                    <button
-                      onClick={() => removeOffDay(dayjs(day.date))}
-                      className="p-2 text-red-500 hover:bg-red-100 rounded transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Instructions */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-medium text-gray-700 mb-2">How to use</h4>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Click on a date to mark it as off</li>
-                <li>• Click on an off day to remove it</li>
-                <li>• Past dates cannot be modified</li>
-              </ul>
-            </div>
           </Card>
         </div>
       </div>
