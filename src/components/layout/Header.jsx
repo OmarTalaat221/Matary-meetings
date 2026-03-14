@@ -31,9 +31,9 @@ const Header = () => {
           </Button>
 
           {/* Mobile New Meeting */}
-          <Button variant="primary" className="sm:hidden !p-2.5">
+          {/* <Button variant="primary" className="sm:hidden !p-2.5">
             <Plus className="w-5 h-5" />
-          </Button>
+          </Button> */}
         </div>
       </div>
     </header>

@@ -3,55 +3,60 @@ import {
   Video,
   Calendar,
   Users,
-  Settings,
-  GraduationCap,
   Stethoscope,
 } from "lucide-react";
 
 import { lazy } from "react";
 
+// ============ AUTH PAGES ============
+const Login = lazy(() => import("../pages/auth/Login"));
+const Signup = lazy(() => import("../pages/auth/Signup"));
+
+// ============ ADMIN PAGES ============
 const Home = lazy(() => import("../pages/dashboard/Home/Home"));
 const Meetings = lazy(() => import("../pages/dashboard/Meetings"));
 const UsersPage = lazy(() => import("../pages/dashboard/Users"));
 const UserCalendar = lazy(() => import("../pages/dashboard/UserCalendar"));
-const Login = lazy(() => import("../pages/auth/Login"));
-const Signup = lazy(() => import("../pages/auth/Signup"));
 const Doctors = lazy(() => import("../pages/dashboard/Doctors/Doctors"));
 const DoctorCalendar = lazy(
   () => import("../pages/dashboard/Doctors/DoctorCalendar")
 );
 
-export const routesData = [
-  // Auth
-  { path: "/login", element: <Login />, protected: false, hidden: true },
-  { path: "/signup", element: <Signup />, protected: false, hidden: true },
+// ============ DOCTOR PAGES ============
+const DoctorMeetings = lazy(() => import("../pages/doctor/Meetings/Meetings"));
+const DoctorCalendarPage = lazy(
+  () => import("../pages/doctor/Calendar/Calendar")
+);
 
-  // Dashboard
+// ============ AUTH ROUTES ============
+export const authRoutes = [
+  { path: "/login", element: <Login /> },
+  { path: "/signup", element: <Signup /> },
+];
+
+// ============ ADMIN ROUTES ============
+export const adminRoutes = [
   {
     path: "/dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
     element: <Home />,
-    protected: true,
   },
   {
     path: "/meetings",
     label: "Meetings",
     icon: Video,
     element: <Meetings />,
-    protected: true,
   },
   {
     path: "/doctors",
     label: "Doctors",
     icon: Stethoscope,
     element: <Doctors />,
-    protected: true,
   },
   {
     path: "/doctors/:doctorId/calendar",
     element: <DoctorCalendar />,
-    protected: true, // ✅ Add protected: true
     hidden: true,
   },
   {
@@ -59,22 +64,51 @@ export const routesData = [
     label: "Students",
     icon: Users,
     element: <UsersPage />,
-    protected: true,
   },
   {
     path: "/users/:userId/calendar",
     element: <UserCalendar />,
-    protected: true,
     hidden: true,
   },
 ];
 
-// Helper functions
-export const getSidebarItems = () =>
-  routesData.filter((route) => route.protected && !route.hidden);
+// ============ DOCTOR ROUTES ============
+export const doctorRoutes = [
+  {
+    path: "/dashboard",
+    label: "Meetings",
+    icon: Video,
+    element: <DoctorMeetings />,
+  },
+  {
+    path: "/calendar",
+    label: "Calendar",
+    icon: Calendar,
+    element: <DoctorCalendarPage />,
+  },
+];
 
-export const getProtectedRoutes = () =>
-  routesData.filter((route) => route.protected);
+// ============ HELPER FUNCTIONS ============
 
-export const getPublicRoutes = () =>
-  routesData.filter((route) => !route.protected);
+// Get routes by role
+export const getRoutesByRole = (role) => {
+  switch (role) {
+    case "admin":
+      return adminRoutes;
+    case "doctor":
+      return doctorRoutes;
+    default:
+      return [];
+  }
+};
+
+// Get sidebar items by role
+export const getSidebarItems = (role) => {
+  const routes = getRoutesByRole(role);
+  return routes.filter((route) => !route.hidden);
+};
+
+// Get home path by role
+export const getHomePath = (role) => {
+  return "/dashboard";
+};

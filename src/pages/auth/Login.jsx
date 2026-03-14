@@ -1,9 +1,8 @@
-// src/pages/auth/Login.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "antd";
-import { Video } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { getHomePath } from "../../routes/routes-data";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 
@@ -54,8 +53,13 @@ const Login = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const result = login(formData);
+
       if (result.success) {
-        navigate("/dashboard");
+        // Navigate to home based on role
+        const homePath = getHomePath(result.role);
+        navigate(homePath);
+      } else {
+        setErrors({ general: result.error });
       }
     } catch (error) {
       setErrors({ general: "Login failed. Please try again." });
@@ -75,6 +79,24 @@ const Login = () => {
               Welcome Back
             </h1>
             <p className="text-gray-600">Sign in to continue to Matary</p>
+          </div>
+
+          {/* Demo Credentials */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm font-medium text-blue-800 mb-2">
+              Demo Credentials:
+            </p>
+            <div className="text-xs text-blue-700 space-y-1">
+              <p>
+                <strong>Admin:</strong> admin@matary.com
+              </p>
+              <p>
+                <strong>Doctor:</strong> doctor@hospital.com
+              </p>
+              <p>
+                <strong>Password:</strong> any 6+ characters
+              </p>
+            </div>
           </div>
 
           {/* Error Alert */}
@@ -128,32 +150,29 @@ const Login = () => {
               Sign In
             </Button>
           </form>
-
-          {/* Sign Up Link */}
-          {/* <p className="text-center mt-8 text-gray-600">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-primary font-semibold hover:underline"
-            >
-              Sign Up
-            </Link>
-          </p> */}
         </div>
       </div>
 
       {/* Right Side - Illustration */}
-      <div className="hidden lg:flex flex-1 bg-primary-dark items-center justify-center p-12">
-        <div className="text-center text-white max-w-lg">
-          {/* Logo with white background */}
+      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-primary to-primary-light items-center justify-center p-12 relative overflow-hidden">
+        {/* Background Decoration */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        </div>
+
+        {/* Content */}
+        <div className="text-center text-white max-w-lg relative z-10">
           <div className="w-64 mx-auto mb-8 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl">
             <img
               src="https://res.cloudinary.com/dp7jfs375/image/upload/v1773481084/Matary_basic_media_20250220_213011_0000.cdaa37d3f760260f3bda29df14569fe8_eblvca.svg"
-              className="w-full h-full"
+              className="w-full h-auto"
               alt="Matary Logo"
             />
           </div>
-          <p className="text-xl text-white/80 leading-relaxed">
+
+          <h2 className="text-2xl font-bold mb-4">Matary Platform</h2>
+          <p className="text-lg text-white/80 leading-relaxed">
             Your complete platform for managing meetings, schedules, and team
             collaboration
           </p>
