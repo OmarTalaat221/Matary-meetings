@@ -395,3 +395,7 @@
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 20px;
 }
+
+.jodit-wysiwyg *:where(ol, ul, li) {
+  all: revert;
+}

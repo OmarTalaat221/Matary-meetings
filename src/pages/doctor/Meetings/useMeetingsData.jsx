@@ -5,46 +5,13 @@ import dayjs from "dayjs";
 
 // Days of the week
 export const weekDays = [
-  { key: "saturday", label: "Saturday", short: "Sat", dayIndex: 6 },
-  { key: "sunday", label: "Sunday", short: "Sun", dayIndex: 0 },
-  { key: "monday", label: "Monday", short: "Mon", dayIndex: 1 },
-  { key: "tuesday", label: "Tuesday", short: "Tue", dayIndex: 2 },
-  { key: "wednesday", label: "Wednesday", short: "Wed", dayIndex: 3 },
-  { key: "thursday", label: "Thursday", short: "Thu", dayIndex: 4 },
-  { key: "friday", label: "Friday", short: "Fri", dayIndex: 5 },
-];
-
-// Time options
-export const timeOptions = [
-  "08:00",
-  "08:30",
-  "09:00",
-  "09:30",
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
-  "17:00",
-  "17:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-  "22:00",
+  { key: "saturday", label: "Saturday", short: "Sat" },
+  { key: "sunday", label: "Sunday", short: "Sun" },
+  { key: "monday", label: "Monday", short: "Mon" },
+  { key: "tuesday", label: "Tuesday", short: "Tue" },
+  { key: "wednesday", label: "Wednesday", short: "Wed" },
+  { key: "thursday", label: "Thursday", short: "Thu" },
+  { key: "friday", label: "Friday", short: "Fri" },
 ];
 
 // Slot status config
@@ -60,7 +27,8 @@ export const slotStatusConfig = {
 // Helper functions
 export const calculateDuration = (startTime, endTime) => {
   const [startH, startM] = startTime.split(":").map(Number);
-  const [endH, endM] = endTime.split(":").map(Number);
+  let [endH, endM] = endTime.split(":").map(Number);
+  if (endH === 0) endH = 24; // Handle midnight
   return endH * 60 + endM - (startH * 60 + startM);
 };
 
@@ -71,59 +39,52 @@ export const formatDuration = (minutes) => {
   return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
 };
 
-// Get Saturday of current week
-const getCurrentWeekSaturday = () => {
-  const today = dayjs();
-  const dayOfWeek = today.day();
-
-  if (dayOfWeek === 6) {
-    return today.startOf("day");
-  } else {
-    const daysToSubtract = dayOfWeek + 1;
-    return today.subtract(daysToSubtract, "day").startOf("day");
-  }
+// Format time to 12-hour format
+export const formatTimeTo12Hour = (time24) => {
+  const [hours] = time24.split(":").map(Number);
+  if (hours === 0) return "12 AM";
+  if (hours === 12) return "12 PM";
+  if (hours > 12) return `${hours - 12} PM`;
+  return `${hours} AM`;
 };
 
-// Storage keys
-const STORAGE_KEY = "doctor_availability";
-const WEEK_KEY = "doctor_availability_week";
+// Storage key - This is PERSISTENT (doesn't reset weekly)
+const STORAGE_KEY = "doctor_weekly_schedule";
 
 // =====================================================
-// 📊 Default Data
+// 📊 Default Schedule (الجدول الأسبوعي الثابت)
 // =====================================================
-const getDefaultAvailability = () => ({
+const getDefaultSchedule = () => ({
   saturday: [
     { id: 1, startTime: "09:00", endTime: "10:00", status: "available" },
-    { id: 2, startTime: "10:30", endTime: "11:30", status: "available" },
-    { id: 3, startTime: "14:00", endTime: "15:30", status: "available" },
+    { id: 2, startTime: "10:00", endTime: "11:00", status: "available" },
+    { id: 3, startTime: "14:00", endTime: "15:00", status: "available" },
   ],
   sunday: [
     { id: 4, startTime: "10:00", endTime: "11:00", status: "available" },
-    { id: 5, startTime: "13:00", endTime: "14:30", status: "available" },
-    { id: 6, startTime: "16:00", endTime: "17:00", status: "available" },
+    { id: 5, startTime: "11:00", endTime: "12:00", status: "available" },
   ],
   monday: [
-    { id: 7, startTime: "09:00", endTime: "10:30", status: "available" },
-    { id: 8, startTime: "11:00", endTime: "12:00", status: "available" },
+    { id: 6, startTime: "09:00", endTime: "10:00", status: "available" },
+    { id: 7, startTime: "15:00", endTime: "16:00", status: "available" },
   ],
   tuesday: [
+    { id: 8, startTime: "13:00", endTime: "14:00", status: "available" },
     { id: 9, startTime: "14:00", endTime: "15:00", status: "available" },
-    { id: 10, startTime: "15:30", endTime: "17:00", status: "available" },
   ],
   wednesday: [
-    { id: 11, startTime: "09:00", endTime: "10:00", status: "available" },
-    { id: 12, startTime: "10:30", endTime: "11:30", status: "available" },
-    { id: 13, startTime: "14:00", endTime: "16:00", status: "available" },
+    { id: 10, startTime: "10:00", endTime: "11:00", status: "available" },
+    { id: 11, startTime: "11:00", endTime: "12:00", status: "available" },
+    { id: 12, startTime: "16:00", endTime: "17:00", status: "available" },
   ],
   thursday: [
-    { id: 14, startTime: "11:00", endTime: "12:30", status: "available" },
-    { id: 15, startTime: "15:00", endTime: "16:30", status: "available" },
+    { id: 13, startTime: "09:00", endTime: "10:00", status: "available" },
   ],
-  friday: [],
+  friday: [], // Day off
 });
 
-// Get empty availability
-const getEmptyAvailability = () => ({
+// Get empty schedule
+const getEmptySchedule = () => ({
   saturday: [],
   sunday: [],
   monday: [],
@@ -133,45 +94,29 @@ const getEmptyAvailability = () => ({
   friday: [],
 });
 
-// =====================================================
-// 🔑 Load availability - FIXED
-// =====================================================
-const loadAvailability = (saturdayDate) => {
+// Load schedule from localStorage
+const loadSchedule = () => {
   try {
-    const savedWeek = localStorage.getItem(WEEK_KEY);
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    const currentWeekId = saturdayDate.format("YYYY-MM-DD");
-
-    console.log("📅 Current week:", currentWeekId);
-    console.log("💾 Saved week:", savedWeek);
-
-    // Check if new week
-    if (savedWeek !== currentWeekId) {
-      console.log("🔄 New week detected! Loading default data...");
-      return getDefaultAvailability();
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
     }
-
-    // Same week - try to load saved data
-    if (savedData) {
-      const parsed = JSON.parse(savedData);
-
-      // Check if saved data has any slots
-      const hasSlots = Object.values(parsed).some(
-        (slots) => slots && slots.length > 0
-      );
-
-      if (hasSlots) {
-        console.log("📂 Loaded saved availability");
-        return parsed;
-      }
-    }
-
-    // No saved data or empty - return default
-    console.log("📊 No saved data, loading defaults...");
-    return getDefaultAvailability();
+    return getDefaultSchedule();
   } catch (error) {
-    console.error("❌ Error loading:", error);
-    return getDefaultAvailability();
+    console.error("Error loading schedule:", error);
+    return getDefaultSchedule();
+  }
+};
+
+// Get current week's Saturday
+const getCurrentWeekSaturday = () => {
+  const today = dayjs();
+  const dayOfWeek = today.day();
+  if (dayOfWeek === 6) {
+    return today.startOf("day");
+  } else {
+    const daysToSubtract = dayOfWeek + 1;
+    return today.subtract(daysToSubtract, "day").startOf("day");
   }
 };
 
@@ -179,39 +124,34 @@ const loadAvailability = (saturdayDate) => {
 // 🎣 Main Hook
 // =====================================================
 export const useMeetingsData = () => {
+  // Weekly schedule (persistent - الجدول الثابت)
+  const [schedule, setSchedule] = useState(() => loadSchedule());
+
+  // Current week Saturday (for display)
   const [currentWeekSaturday] = useState(() => getCurrentWeekSaturday());
 
-  const [availability, setAvailability] = useState(() => {
-    // Clear old data and force reload defaults for testing
-    // Remove these 2 lines after testing:
-    // localStorage.removeItem(STORAGE_KEY);
-    // localStorage.removeItem(WEEK_KEY);
-
-    return loadAvailability(currentWeekSaturday);
-  });
-
-  // Modal states
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  // Drawer states
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedDayLabel, setSelectedDayLabel] = useState("");
+
+  // Slot details modal
   const [slotDetailsModalOpen, setSlotDetailsModalOpen] = useState(false);
-  const [timeSlotModalOpen, setTimeSlotModalOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
 
-  // Save to localStorage whenever availability changes
+  // Save to localStorage whenever schedule changes
   useEffect(() => {
-    const weekId = currentWeekSaturday.format("YYYY-MM-DD");
-    localStorage.setItem(WEEK_KEY, weekId);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(availability));
-    console.log("💾 Saved availability for week:", weekId);
-  }, [availability, currentWeekSaturday]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+    console.log("💾 Schedule saved");
+  }, [schedule]);
 
-  // Week dates
+  // Week dates (for display only)
   const weekDates = useMemo(() => {
     return weekDays.map((day, index) => ({
       ...day,
       date: currentWeekSaturday.add(index, "day"),
       dateFormatted: currentWeekSaturday.add(index, "day").format("MMM D"),
-      fullLabel: `${day.label}, ${currentWeekSaturday.add(index, "day").format("MMM D, YYYY")}`,
+      fullLabel: `${day.label}`,
     }));
   }, [currentWeekSaturday]);
 
@@ -221,109 +161,62 @@ export const useMeetingsData = () => {
     return {
       start: currentWeekSaturday.format("MMM D"),
       end: endOfWeek.format("MMM D, YYYY"),
-      saturday: currentWeekSaturday.format("YYYY-MM-DD"),
     };
   }, [currentWeekSaturday]);
 
   // Get slots for day
   const getSlotsForDay = useCallback(
     (dayKey) => {
-      return (availability[dayKey] || []).sort((a, b) =>
+      return (schedule[dayKey] || []).sort((a, b) =>
         a.startTime.localeCompare(b.startTime)
       );
     },
-    [availability]
+    [schedule]
   );
 
-  // Check time conflict
-  const hasTimeConflict = useCallback(
-    (dayKey, startTime, endTime, excludeSlotId = null) => {
-      const slots = availability[dayKey] || [];
-      return slots.some((slot) => {
-        if (excludeSlotId && slot.id === excludeSlotId) return false;
-        return startTime < slot.endTime && endTime > slot.startTime;
-      });
-    },
-    [availability]
-  );
+  // Save slots for a day (from drawer)
+  const saveDaySlots = useCallback((dayKey, slots) => {
+    const newSlots = slots.map((slot, index) => ({
+      id: Date.now() + index,
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      status: "available",
+    }));
 
-  // Add slot
-  const addTimeSlot = useCallback(
-    (dayKey, slotData) => {
-      const { startTime, endTime } = slotData;
+    setSchedule((prev) => ({
+      ...prev,
+      [dayKey]: newSlots,
+    }));
 
-      if (endTime <= startTime) {
-        message.error("End time must be after start time");
-        return false;
-      }
+    message.success(
+      `${dayKey.charAt(0).toUpperCase() + dayKey.slice(1)} schedule updated!`
+    );
+  }, []);
 
-      if (hasTimeConflict(dayKey, startTime, endTime)) {
-        message.error("This time slot conflicts with an existing slot");
-        return false;
-      }
-
-      const newSlot = {
-        id: Date.now(),
-        startTime,
-        endTime,
-        status: "available",
-      };
-
-      setAvailability((prev) => ({
-        ...prev,
-        [dayKey]: [...(prev[dayKey] || []), newSlot].sort((a, b) =>
-          a.startTime.localeCompare(b.startTime)
-        ),
-      }));
-
-      message.success("Time slot added successfully");
-      setTimeSlotModalOpen(false);
-      return true;
-    },
-    [hasTimeConflict]
-  );
-
-  // Remove slot
+  // Remove single slot
   const removeTimeSlot = useCallback((dayKey, slotId) => {
-    setAvailability((prev) => ({
+    setSchedule((prev) => ({
       ...prev,
       [dayKey]: prev[dayKey].filter((slot) => slot.id !== slotId),
     }));
     message.success("Time slot removed");
   }, []);
 
-  // Edit slot
-  const editTimeSlot = useCallback(
-    (dayKey, slotId, newData) => {
-      const { startTime, endTime } = newData;
+  // Open drawer for a day
+  const openDrawer = useCallback((dayKey, dayLabel) => {
+    setSelectedDay(dayKey);
+    setSelectedDayLabel(dayLabel);
+    setDrawerOpen(true);
+  }, []);
 
-      if (endTime <= startTime) {
-        message.error("End time must be after start time");
-        return false;
-      }
+  // Close drawer
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+    setSelectedDay(null);
+    setSelectedDayLabel("");
+  }, []);
 
-      if (hasTimeConflict(dayKey, startTime, endTime, slotId)) {
-        message.error("This time slot conflicts with an existing slot");
-        return false;
-      }
-
-      setAvailability((prev) => ({
-        ...prev,
-        [dayKey]: prev[dayKey]
-          .map((slot) =>
-            slot.id === slotId ? { ...slot, startTime, endTime } : slot
-          )
-          .sort((a, b) => a.startTime.localeCompare(b.startTime)),
-      }));
-
-      message.success("Time slot updated successfully");
-      setTimeSlotModalOpen(false);
-      return true;
-    },
-    [hasTimeConflict]
-  );
-
-  // Modal actions
+  // Open slot details
   const openSlotDetailsModal = useCallback((dayKey, slot, dayLabel) => {
     setSelectedDay(dayKey);
     setSelectedSlot(slot);
@@ -331,21 +224,9 @@ export const useMeetingsData = () => {
     setSlotDetailsModalOpen(true);
   }, []);
 
-  const openTimeSlotModal = useCallback((dayKey) => {
-    setSelectedDay(dayKey);
-    setSelectedSlot(null);
-    setTimeSlotModalOpen(true);
-  }, []);
-
-  const openEditSlotModal = useCallback((dayKey, slot) => {
-    setSelectedDay(dayKey);
-    setSelectedSlot(slot);
-    setTimeSlotModalOpen(true);
-  }, []);
-
+  // Close modals
   const closeModals = useCallback(() => {
     setSlotDetailsModalOpen(false);
-    setTimeSlotModalOpen(false);
     setSelectedSlot(null);
     setSelectedDay(null);
     setSelectedDayLabel("");
@@ -356,14 +237,14 @@ export const useMeetingsData = () => {
     let totalSlots = 0;
     let totalHours = 0;
 
-    Object.values(availability).forEach((slots) => {
+    Object.values(schedule).forEach((slots) => {
       slots.forEach((slot) => {
         totalSlots++;
         totalHours += calculateDuration(slot.startTime, slot.endTime) / 60;
       });
     });
 
-    const daysWithSlots = Object.values(availability).filter(
+    const daysWithSlots = Object.values(schedule).filter(
       (slots) => slots.length > 0
     ).length;
 
@@ -373,64 +254,45 @@ export const useMeetingsData = () => {
       daysWithSlots,
       emptyDays: 7 - daysWithSlots,
     };
-  }, [availability]);
+  }, [schedule]);
 
-  // =====================================================
-  // 🧪 Test Helpers
-  // =====================================================
+  // Reset to default
   const resetToDefault = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(WEEK_KEY);
-    setAvailability(getDefaultAvailability());
-    message.success("Reset to default data!");
+    setSchedule(getDefaultSchedule());
+    message.success("Reset to default schedule!");
   }, []);
 
+  // Clear all
   const clearAllSlots = useCallback(() => {
-    setAvailability(getEmptyAvailability());
+    setSchedule(getEmptySchedule());
     message.success("All slots cleared!");
   }, []);
 
-  const testWeekReset = useCallback(() => {
-    console.log(
-      "🧪 Current Saturday:",
-      currentWeekSaturday.format("YYYY-MM-DD")
-    );
-    console.log("🧪 Stored week:", localStorage.getItem(WEEK_KEY));
-    console.log("🧪 Availability:", availability);
-    console.log("🧪 Stats:", stats);
-  }, [currentWeekSaturday, availability, stats]);
-
-  const simulateNewWeek = useCallback(() => {
-    const nextSat = currentWeekSaturday.add(7, "day").format("YYYY-MM-DD");
-    localStorage.setItem(WEEK_KEY, nextSat);
-    message.info("Refresh page to see new week reset!");
-  }, [currentWeekSaturday]);
-
   return {
-    availability,
+    schedule,
     weekDates,
     weekInfo,
-    currentWeekSaturday,
     stats,
     getSlotsForDay,
-    addTimeSlot,
+    saveDaySlots,
     removeTimeSlot,
-    editTimeSlot,
-    hasTimeConflict,
-    selectedSlot,
+
+    // Drawer
+    drawerOpen,
     selectedDay,
     selectedDayLabel,
+    openDrawer,
+    closeDrawer,
+
+    // Slot details modal
     slotDetailsModalOpen,
-    timeSlotModalOpen,
+    selectedSlot,
     openSlotDetailsModal,
-    openTimeSlotModal,
-    openEditSlotModal,
     closeModals,
-    // Test helpers
+
+    // Helpers
     resetToDefault,
     clearAllSlots,
-    testWeekReset,
-    simulateNewWeek,
   };
 };
 

@@ -4,6 +4,7 @@ import {
   Calendar,
   Users,
   Stethoscope,
+  Settings,
 } from "lucide-react";
 
 import { lazy } from "react";
@@ -27,6 +28,7 @@ const DoctorMeetings = lazy(() => import("../pages/doctor/Meetings/Meetings"));
 const DoctorCalendarPage = lazy(
   () => import("../pages/doctor/Calendar/Calendar")
 );
+const GeneralSettings = lazy(() => import("../pages/doctor/Settings/Settings"));
 
 // ============ AUTH ROUTES ============
 export const authRoutes = [
@@ -85,6 +87,13 @@ export const doctorRoutes = [
     label: "Calendar",
     icon: Calendar,
     element: <DoctorCalendarPage />,
+  },
+
+  {
+    path: "/settings",
+    label: "Settings",
+    icon: Settings, // من lucide-react
+    element: <GeneralSettings />,
   },
 ];
 
