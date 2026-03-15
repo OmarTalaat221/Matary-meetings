@@ -25,10 +25,10 @@ const Header = () => {
         {/* Actions */}
         <div className="flex items-center gap-3">
           {/* New Meeting Button */}
-          <Button variant="primary" className="hidden sm:flex">
+          {/* <Button variant="primary" className="hidden sm:flex">
             <Plus className="w-5 h-5" />
             <span>New Meeting</span>
-          </Button>
+          </Button> */}
 
           {/* Mobile New Meeting */}
           {/* <Button variant="primary" className="sm:hidden !p-2.5">

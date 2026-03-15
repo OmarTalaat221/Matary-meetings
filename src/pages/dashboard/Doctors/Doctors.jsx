@@ -87,15 +87,15 @@ const Doctors = () => {
           handleViewCalendar(record, e.domEvent);
         },
       },
-      {
-        key: "edit",
-        label: "Edit",
-        icon: <Edit className="w-4 h-4" />,
-        onClick: (e) => {
-          e.domEvent.stopPropagation();
-          handleEdit(record, e.domEvent);
-        },
-      },
+      // {
+      //   key: "edit",
+      //   label: "Edit",
+      //   icon: <Edit className="w-4 h-4" />,
+      //   onClick: (e) => {
+      //     e.domEvent.stopPropagation();
+      //     handleEdit(record, e.domEvent);
+      //   },
+      // },
       // {
       //   type: "divider",
       // },

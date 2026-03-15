@@ -48,26 +48,26 @@ const Users = () => {
       icon: <Eye size={16} />,
       onClick: () => openModal("view", record),
     },
-    {
-      key: "edit",
-      label: "Edit",
-      icon: <Edit size={16} />,
-      onClick: () => openModal("edit", record),
-    },
+    // {
+    //   key: "edit",
+    //   label: "Edit",
+    //   icon: <Edit size={16} />,
+    //   onClick: () => openModal("edit", record),
+    // },
     {
       key: "calendar",
       label: "View Schedule",
       icon: <Calendar size={16} />,
       onClick: () => navigate(`/users/${record.id}/calendar`),
     },
-    { type: "divider" },
-    {
-      key: "delete",
-      label: "Delete",
-      icon: <Trash2 size={16} />,
-      danger: true,
-      onClick: () => openModal("delete", record),
-    },
+    // { type: "divider" },
+    // {
+    //   key: "delete",
+    //   label: "Delete",
+    //   icon: <Trash2 size={16} />,
+    //   danger: true,
+    //   onClick: () => openModal("delete", record),
+    // },
   ];
 
   const columns = [
@@ -165,10 +165,10 @@ const Users = () => {
           <h1 className="text-2xl font-bold text-gray-900">Students</h1>
           <p className="text-gray-500">Manage student accounts</p>
         </div>
-        <Button onClick={() => openModal("add")}>
+        {/* <Button onClick={() => openModal("add")}>
           <UserPlus size={18} />
           Add Student
-        </Button>
+        </Button> */}
       </div>
 
       {/* Stats */}

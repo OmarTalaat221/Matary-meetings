@@ -13,6 +13,7 @@ import {
   TrendingDown,
 } from "lucide-react";
 import Button from "../../../components/common/Button";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const stats = [
@@ -81,6 +82,8 @@ const Home = () => {
     { icon: Plus, label: "New Meeting", color: "bg-primary" },
   ];
 
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -143,7 +146,11 @@ const Home = () => {
             <h2 className="text-lg font-semibold text-gray-800">
               Today's Meetings
             </h2>
-            <Button variant="ghost" className="!py-2 !px-3 text-sm gap-1">
+            <Button
+              onClick={() => navigate("/meetings")}
+              variant="ghost"
+              className="!py-2 !px-3 text-sm gap-1"
+            >
               View All
               <ArrowRight className="w-4 h-4" />
             </Button>
@@ -181,14 +188,14 @@ const Home = () => {
                       {meeting.participants}
                     </span>
                   </div>
-                  <Button
+                  {/* <Button
                     variant={
                       meeting.status === "starting" ? "accent" : "primary"
                     }
                     className="!py-2 !px-4 text-sm"
                   >
                     {meeting.status === "starting" ? "Join Now" : "View"}
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             ))}
@@ -204,7 +211,7 @@ const Home = () => {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-6">
+          {/* <h2 className="text-lg font-semibold text-gray-800 mb-6">
             Quick Actions
           </h2>
           <div className="space-y-3">
@@ -226,11 +233,11 @@ const Home = () => {
                 </button>
               );
             })}
-          </div>
+          </div> */}
 
           {/* Additional Info */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <h3 className="text-sm font-medium text-gray-500 mb-3">
+          <div className="">
+            <h3 className="text-lg font-medium text-black font-bold mb-3">
               This Week Summary
             </h3>
             <div className="space-y-2">

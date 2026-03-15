@@ -315,8 +315,7 @@ const Meetings = () => {
         rowKey="id"
         searchable
         searchPlaceholder="Search meetings..."
-        addButton
-        addButtonText="New Meeting"
+        addButton={false}
         onAddClick={() => openModal("add")}
         rowSelection={rowSelection}
         rowClassName={getRowClassName}
