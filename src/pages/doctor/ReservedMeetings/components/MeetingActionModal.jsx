@@ -102,7 +102,7 @@ const MeetingActionModal = ({
           )}
         </div>
       }
-      destroyOnClose
+      destroyOnHidden
     >
       <div className="pt-4 space-y-4">
         {/* Student Info */}

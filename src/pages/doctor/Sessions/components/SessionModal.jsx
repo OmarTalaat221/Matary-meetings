@@ -114,7 +114,7 @@ const SessionModal = ({ open, onClose, onSave, session, loading }) => {
           <span>{isEditing ? "Edit Session" : "Create New Session"}</span>
         </div>
       }
-      destroyOnClose
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" className="mt-4" requiredMark={false}>
         {/* Title */}

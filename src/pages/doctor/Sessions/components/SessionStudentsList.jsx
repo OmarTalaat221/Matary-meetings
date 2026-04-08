@@ -15,12 +15,12 @@ import {
   X,
   Loader2,
   FileText,
-  FileJson,
   FileSpreadsheet,
   ChevronDown,
 } from "lucide-react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
 import useSessionStudents from "./useSessionStudents";
 import useDebounce from "../../../../hooks/useDebounce";
 import DataTable from "../../../../components/common/DataTable";
@@ -180,57 +180,65 @@ const SessionStudentsList = () => {
   };
 
   // Export functions
-  const handleExportCSV = () => {
+  const handleExportExcel = () => {
     if (students.length === 0) return;
-    const headers = ["#", "Name", "Nickname", "Email", "Phone", "Booked At"];
-    const csvData = students.map((s, index) => [
-      index + 1,
-      s.student_name,
-      s.student_nickname || "",
-      s.student_email,
-      s.phone,
-      s.booked_at || "",
-    ]);
-    const csvContent = [
-      headers.join(","),
-      ...csvData.map((row) => row.map((cell) => `"${cell}"`).join(",")),
-    ].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `session_${sessionId}_students.csv`;
-    link.click();
-  };
-
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-    doc.text(`Students List - ${sessionInfo?.title || sessionId}`, 14, 15);
-    const tableColumn = ["#", "Name", "Nickname", "Email", "Phone", "Booked At"];
-    const tableRows = students.map((s, index) => [
-      index + 1,
-      s.student_name,
-      s.student_nickname || "",
-      s.student_email,
-      s.phone,
-      s.booked_at || "",
-    ]);
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 20,
-    });
-    doc.save(`session_${sessionId}_students.pdf`);
-  };
-
-  const handleExportWord = () => {
-    const headers = ["#", "Name", "Nickname", "Email", "Phone", "Booked At"];
+    const headers = ["#", "Name", "Nickname", "Email", "Phone"];
     const rows = students.map((s, index) => [
       index + 1,
       s.student_name,
       s.student_nickname || "",
       s.student_email,
       s.phone,
-      s.booked_at || "",
+    ]);
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+    XLSX.writeFile(workbook, `session_${sessionId}_students.xlsx`);
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.text(`Students List - ${sessionInfo?.title || sessionId}`, 14, 15);
+    const tableColumn = ["#", "Name", "Nickname", "Email", "Phone"];
+    const tableRows = students.map((s, index) => [
+      index + 1,
+      s.student_name,
+      s.student_nickname || "",
+      s.student_email,
+      s.phone,
+    ]);
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      didDrawCell: (data) => {
+        // Index 4 is the Phone column
+        if (data.section === "body" && data.column.index === 4) {
+          const phone = data.cell.raw;
+          if (phone) {
+            doc.link(
+              data.cell.x,
+              data.cell.y,
+              data.cell.width,
+              data.cell.height,
+              { url: `tel:${phone}` }
+            );
+          }
+        }
+      },
+    });
+    doc.save(`session_${sessionId}_students.pdf`);
+  };
+
+  const handleExportWord = () => {
+    const headers = ["#", "Name", "Nickname", "Email", "Phone"];
+    const rows = students.map((s, index) => [
+      index + 1,
+      s.student_name,
+      s.student_nickname || "",
+      s.student_email,
+      s.phone,
     ]);
 
     let html = `
@@ -274,10 +282,10 @@ const SessionStudentsList = () => {
 
   const exportMenuItems = [
     {
-      key: "csv",
-      label: "Export to CSV",
+      key: "excel",
+      label: "Export to Excel",
       icon: <FileSpreadsheet className="w-4 h-4" />,
-      onClick: handleExportCSV,
+      onClick: handleExportExcel,
     },
     {
       key: "pdf",
@@ -288,7 +296,7 @@ const SessionStudentsList = () => {
     {
       key: "word",
       label: "Export to Word",
-      icon: <FileJson className="w-4 h-4" />, // FileJson as a placeholder for Word icon
+      icon: <FileText className="w-4 h-4" />,
       onClick: handleExportWord,
     },
   ];
@@ -360,4 +368,94 @@ const SessionStudentsList = () => {
             </div>
             <div>
               <p className="text-sm text-gray-500">Total Students</p>
-              <p
+              <p className="text-xl font-bold text-gray-900">
+                {students.length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Session</p>
+              <p className="text-xl font-bold text-gray-900 truncate max-w-[150px]">
+                {sessionInfo?.title || `#${sessionId}`}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="flex-1 w-full relative">
+            <Input
+              placeholder="Search by name, email, or phone..."
+              value={searchInput}
+              onChange={onSearchChange}
+              prefix={
+                showSearchingIndicator ? (
+                  <Loader2 className="w-4 h-4 text-primary animate-spin" />
+                ) : (
+                  <Search className="w-4 h-4 text-gray-400" />
+                )
+              }
+              suffix={
+                searchInput ? (
+                  <button
+                    onClick={onClearSearch}
+                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                    type="button"
+                  >
+                    <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                  </button>
+                ) : null
+              }
+              className="w-full"
+              size="large"
+              allowClear={false}
+            />
+          </div>
+
+          {/* Search Status */}
+          <div className="flex items-center gap-2 text-sm text-gray-500 whitespace-nowrap">
+            {showSearchingIndicator ? (
+              <span className="flex items-center gap-2 text-primary">
+                <span>Searching...</span>
+              </span>
+            ) : keyword ? (
+              <span>
+                Found <strong>{students.length}</strong> result
+                {students.length !== 1 ? "s" : ""} for "
+                <strong>{keyword}</strong>"
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      {/* Students DataTable */}
+      <DataTable
+        columns={columns}
+        data={students}
+        loading={loading}
+        rowKey="student_id"
+        searchable={false}
+        pageSize={students.length || 10}
+        showPagination={false}
+        emptyText={
+          keyword
+            ? `No students found matching "${keyword}"`
+            : "No students have booked this session yet"
+        }
+        emptyIcon={Users}
+      />
+    </div>
+  );
+};
+
+export default SessionStudentsList;

@@ -36,7 +36,7 @@ const UserModal = ({
       okText={isEdit ? "Save" : "Add"}
       cancelText="Cancel"
       confirmLoading={loading}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         form={form}

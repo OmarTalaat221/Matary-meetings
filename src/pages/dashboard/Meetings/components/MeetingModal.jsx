@@ -73,7 +73,7 @@ const MeetingModal = ({
         cancelText="Cancel"
         confirmLoading={loading}
         width={600}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form
           form={form}
