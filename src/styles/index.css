@@ -1,0 +1,430 @@
+/* src/styles/index.css */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+@custom-variant landscape (@media (max-width: 1023px) and (orientation: landscape));
+/* ========== Theme Configuration ========== */
+@theme {
+  --color-primary: #5046c4;
+  --color-primary-light: #6c69fa;
+  --color-primary-dark: #3d35a0;
+  --color-accent: #ff005c;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  --font-family-inter: "Inter", sans-serif;
+}
+
+/* ========== Base Styles ========== */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    direction: ltr !important;
+    text-align: left !important;
+  }
+
+  body {
+    font-family: var(--font-family-inter);
+    background-color: #ffffff;
+    color: #1f2937;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+/* ========== Force LTR on Ant Design ========== */
+.ant-table,
+.ant-table-wrapper,
+.ant-table-container,
+.ant-table-content,
+.ant-table-thead,
+.ant-table-tbody,
+.ant-table-row,
+.ant-table-cell,
+.ant-pagination,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select,
+.ant-modal,
+.ant-form,
+.ant-dropdown {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* ========== Ant Design Global Overrides ========== */
+.ant-input,
+.ant-input-password,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker,
+.ant-modal-title,
+.ant-modal-body,
+.ant-form-item-label,
+.ant-descriptions-item-label,
+.ant-descriptions-item-content {
+  font-family: var(--font-family-inter) !important;
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+.ant-input,
+.ant-input-password,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker {
+  border-radius: 8px !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused,
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(80, 70, 196, 0.15) !important;
+}
+
+.ant-input:hover,
+.ant-input-affix-wrapper:hover,
+.ant-select:hover .ant-select-selector,
+.ant-picker:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.ant-btn-primary {
+  background-color: var(--color-primary) !important;
+  font-family: var(--font-family-inter) !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: var(--color-primary-dark) !important;
+}
+
+.ant-checkbox-wrapper,
+.ant-select,
+.ant-tag,
+.ant-pagination,
+.ant-modal,
+.ant-form,
+.ant-descriptions {
+  font-family: var(--font-family-inter) !important;
+}
+
+/* ========== Data Table Styles ========== */
+.data-table-wrapper {
+  width: 100%;
+  direction: ltr !important;
+}
+
+/* Table Header */
+.ant-table {
+  font-family: var(--font-family-inter) !important;
+  direction: ltr !important;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #f8fafc !important;
+  color: #374151 !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 16px !important;
+  border-bottom: 2px solid #e5e7eb !important;
+  text-align: left !important;
+}
+
+.ant-table-thead > tr > th::before {
+  display: none !important;
+}
+
+/* Table Body */
+.ant-table-tbody > tr > td {
+  padding: 14px 16px !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  transition: all 0.2s ease !important;
+  text-align: left !important;
+}
+
+/* Zebra Striping */
+.ant-table-tbody > tr.table-row-light > td {
+  background-color: #ffffff !important;
+}
+
+.ant-table-tbody > tr.table-row-dark > td {
+  background-color: #f9fafb !important;
+}
+
+/* Row Hover */
+.ant-table-tbody > tr:hover > td {
+  background-color: #f0f0ff !important;
+}
+
+/* Row with cursor pointer */
+.ant-table-tbody > tr.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Status Row Colors */
+.ant-table-tbody > tr.row-success > td {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+.ant-table-tbody > tr.row-warning > td {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+.ant-table-tbody > tr.row-error > td {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Selected Row */
+.ant-table-tbody > tr.ant-table-row-selected > td {
+  background-color: rgba(80, 70, 196, 0.1) !important;
+}
+
+/* Pagination - LTR */
+.ant-pagination {
+  padding: 16px !important;
+  margin: 0 !important;
+  direction: ltr !important;
+  text-align: right !important;
+}
+
+.ant-pagination-item-active {
+  border-color: var(--color-primary) !important;
+}
+
+.ant-pagination-item-active a {
+  color: var(--color-primary) !important;
+}
+
+.ant-pagination-item:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.ant-pagination-item:hover a {
+  color: var(--color-primary) !important;
+}
+
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Filter Dropdown - LTR */
+.ant-table-filter-dropdown {
+  font-family: var(--font-family-inter) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+  direction: ltr !important;
+}
+
+/* Dropdown Menu - LTR */
+.ant-dropdown,
+.ant-dropdown-menu {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Sorter */
+.ant-table-column-sorter {
+  color: #9ca3af !important;
+}
+
+.ant-table-column-sorter-up.active,
+.ant-table-column-sorter-down.active {
+  color: var(--color-primary) !important;
+}
+
+/* Empty State */
+.ant-table-placeholder {
+  padding: 48px 16px !important;
+}
+
+.ant-empty-description {
+  font-family: var(--font-family-inter) !important;
+  color: #6b7280 !important;
+}
+
+/* Loading */
+.ant-spin {
+  color: var(--color-primary) !important;
+}
+
+/* ========== Modal - LTR ========== */
+.ant-modal,
+.ant-modal-content,
+.ant-modal-header,
+.ant-modal-body,
+.ant-modal-footer {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* ========== Form - LTR ========== */
+.ant-form,
+.ant-form-item,
+.ant-form-item-label {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+.ant-form-item-label > label {
+  text-align: left !important;
+}
+
+/* ========== Calendar Styles ========== */
+.ant-picker-calendar {
+  font-family: var(--font-family-inter) !important;
+  direction: ltr !important;
+}
+
+.calendar-card .ant-picker-cell-selected .ant-picker-calendar-date {
+  background: transparent !important;
+}
+
+.calendar-card .ant-picker-cell-selected .ant-picker-calendar-date-value {
+  color: inherit;
+}
+
+.calendar-card .ant-picker-calendar-date:hover {
+  background-color: #fafafa !important;
+  transform: scale(1.02);
+  transition: all 0.2s;
+}
+
+/* ========== Scrollbar ========== */
+.ant-table-body::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* ========== Component Classes ========== */
+@layer components {
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+  }
+}
+
+/* ========== Utilities ========== */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar for Sidebar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Show scrollbar on hover */
+.scrollbar-on-hover {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-on-hover::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.scrollbar-on-hover:hover {
+  scrollbar-width: thin;
+}
+
+.scrollbar-on-hover:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-on-hover:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+}
+
+.jodit-wysiwyg *:where(ol, ul, li) {
+  all: revert;
+}
+
+/* Ended Meetings - Red/Gray */
+.ant-table-tbody > tr.row-ended > td {
+  background-color: rgb(254 242 242) !important; /* red-50 */
+}
+.ant-table-tbody > tr.row-ended:hover > td {
+  background-color: rgb(254 226 226) !important; /* red-100 */
+}
+
+/* Ongoing Meetings - Green */
+.ant-table-tbody > tr.row-ongoing > td {
+  background-color: rgb(240 253 244) !important; /* green-50 */
+}
+.ant-table-tbody > tr.row-ongoing:hover > td {
+  background-color: rgb(220 252 231) !important; /* green-100 */
+}
+
+/* Pending Meetings - Blue (optional) */
+.ant-table-tbody > tr.row-pending > td {
+  background-color: rgb(239 246 255) !important; /* blue-50 */
+}
+.ant-table-tbody > tr.row-pending:hover > td {
+  background-color: rgb(219 234 254) !important; /* blue-100 */
+}
