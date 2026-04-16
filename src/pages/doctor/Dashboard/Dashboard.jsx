@@ -90,7 +90,10 @@ const Dashboard = () => {
         </div>
 
         {/* Today's Overview */}
-        <Card className="!bg-gradient-to-r from-primary to-primary-light border-0 text-white">
+        <Card
+          className="!bg-gradient-to-r from-primary to-primary-light border-0 text-white overflow-hidden"
+          style={{ backgroundColor: "var(--primary)" }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-white/80 text-sm">Today</p>
@@ -129,7 +132,10 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="!bg-gradient-to-br from-emerald-50 to-green-100 border-0">
+          <Card
+            className="!bg-gradient-to-br from-emerald-50 to-green-100 border-0"
+            style={{ backgroundColor: "#ecfdf5" }}
+          >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center">
                 <Clock size={24} className="text-white" />
@@ -143,7 +149,10 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="!bg-gradient-to-br from-blue-50 to-blue-100 border-0">
+          <Card
+            className="!bg-gradient-to-br from-blue-50 to-blue-100 border-0"
+            style={{ backgroundColor: "#eff6ff" }}
+          >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
                 <Timer size={24} className="text-white" />
@@ -157,7 +166,10 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="!bg-gradient-to-br from-purple-50 to-purple-100 border-0">
+          <Card
+            className="!bg-gradient-to-br from-purple-50 to-purple-100 border-0"
+            style={{ backgroundColor: "#faf5ff" }}
+          >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
                 <CalendarDays size={24} className="text-white" />
@@ -171,7 +183,10 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="!bg-gradient-to-br from-orange-50 to-amber-100 border-0">
+          <Card
+            className="!bg-gradient-to-br from-orange-50 to-amber-100 border-0"
+            style={{ backgroundColor: "#fff7ed" }}
+          >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                 <CalendarOff size={24} className="text-white" />

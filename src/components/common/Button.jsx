@@ -51,6 +51,11 @@ const Button = ({
         ${fullWidth ? "w-full" : ""}
         ${className}
       `}
+      style={{
+        WebkitAppearance: "none",
+        transform: "translateZ(0)",
+        WebkitTransform: "translateZ(0)",
+      }}
       {...props}
     >
       {loading && (

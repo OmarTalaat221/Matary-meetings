@@ -4,16 +4,27 @@
 
 @custom-variant landscape (@media (max-width: 1023px) and (orientation: landscape));
 /* ========== Theme Configuration ========== */
-@theme {
-  --color-primary: #5046c4;
-  --color-primary-light: #6c69fa;
-  --color-primary-dark: #3d35a0;
-  --color-accent: #ff005c;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-
+:root {
+  --primary: #5046c4;
+  --primary-light: #6c69fa;
+  --primary-dark: #3d35a0;
+  --accent: #ff005c;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
   --font-family-inter: "Inter", sans-serif;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  --font-family-inter: var(--font-family-inter);
 }
 
 /* ========== Base Styles ========== */
@@ -22,23 +33,43 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   html,
   body {
     direction: ltr !important;
     text-align: left !important;
+    min-height: 100%;
+    min-height: -webkit-fill-available;
   }
 
   body {
     font-family: var(--font-family-inter);
     background-color: #ffffff;
     color: #1f2937;
+    /* Fix for some iOS background issues */
+    -webkit-tap-highlight-color: transparent;
   }
 
   button {
     cursor: pointer;
   }
+}
+
+/* Safari Backdrop Filter Fix */
+.backdrop-blur {
+  -webkit-backdrop-filter: blur(8px);
+}
+.backdrop-blur-md {
+  -webkit-backdrop-filter: blur(12px);
+}
+.backdrop-blur-lg {
+  -webkit-backdrop-filter: blur(16px);
+}
+.backdrop-blur-xl {
+  -webkit-backdrop-filter: blur(24px);
 }
 
 /* ========== Force LTR on Ant Design ========== */
@@ -103,12 +134,21 @@
 }
 
 .ant-btn-primary {
-  background-color: var(--color-primary) !important;
+  background-color: var(--primary) !important;
   font-family: var(--font-family-inter) !important;
+  /* Fix for Safari background disappearance */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .ant-btn-primary:hover {
-  background-color: var(--color-primary-dark) !important;
+  background-color: var(--primary-dark) !important;
+}
+
+/* Ensure all buttons have appearance reset for iOS */
+.ant-btn, .ant-btn-primary, .ant-btn-default {
+  -webkit-appearance: none;
+  background-origin: border-box;
 }
 
 .ant-checkbox-wrapper,
@@ -271,6 +311,19 @@
 .ant-modal-footer {
   direction: ltr !important;
   text-align: left !important;
+}
+
+/* Safari Modal Fixes */
+.ant-modal-content {
+  background-color: #ffffff !important;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.ant-modal-mask {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
 /* ========== Form - LTR ========== */

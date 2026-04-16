@@ -125,7 +125,6 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
     );
   };
 
-  // Sidebar classes
   const sidebarClasses = `
     bg-primary h-screen text-white flex flex-col fixed left-0 top-0 z-50
     transition-transform duration-300 ease-in-out
@@ -134,7 +133,10 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
   `;
 
   return (
-    <aside className={sidebarClasses}>
+    <aside
+      className={sidebarClasses}
+      style={{ WebkitTransform: isMobile ? (isOpen ? "translateX(0)" : "translateX(-100%)") : "none" }}
+    >
       {/* Header */}
       <div className="p-4 sm:p-6 border-b border-white/10 flex-shrink-0">
         {/* Close button - Mobile only */}

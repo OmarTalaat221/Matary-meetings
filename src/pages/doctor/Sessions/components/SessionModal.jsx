@@ -9,17 +9,52 @@ import {
   InputNumber,
   Button,
   Divider,
+  Select,
 } from "antd";
 import { X, BookOpen, CalendarCheck } from "lucide-react";
 import dayjs from "dayjs";
+import axios from "axios";
 
 const SessionModal = ({ open, onClose, onSave, session, loading }) => {
   const [form] = Form.useForm();
   const [isFormValid, setIsFormValid] = useState(false);
+  const [universities, setUniversities] = useState([]);
+  const [fetchingData, setFetchingData] = useState(false);
   const isEditing = !!session;
 
   // Watch all form values to check validity
   const formValues = Form.useWatch([], form);
+
+  // Watch university to filter grades
+  const selectedUniversityId = Form.useWatch("university_id", form);
+
+  // Get grades for selected university
+  const grades =
+    universities.find((u) => u.university_id === selectedUniversityId)
+      ?.grades || [];
+
+  // Fetch Universities and Grades
+  useEffect(() => {
+    const fetchData = async () => {
+      setFetchingData(true);
+      try {
+        const response = await axios.get(
+          "https://back.dr-elmatary.com/El_Matary_Platform/platform/admin/universities/select_universities_grade.php"
+        );
+        if (response.data.status === "success") {
+          setUniversities(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+      } finally {
+        setFetchingData(false);
+      }
+    };
+
+    if (open) {
+      fetchData();
+    }
+  }, [open]);
 
   // Check form validity whenever values change
   useEffect(() => {
@@ -50,6 +85,8 @@ const SessionModal = ({ open, onClose, onSave, session, loading }) => {
             : null,
           address: session.address,
           student_limit: session.student_limit,
+          university_id: session.university_id,
+          grade_id: session.grade_id,
         });
       } else {
         // Create mode - reset form
@@ -73,6 +110,8 @@ const SessionModal = ({ open, onClose, onSave, session, loading }) => {
           : null,
         address: values.address,
         student_limit: values.student_limit,
+        university_id: values.university_id,
+        grade_id: values.grade_id,
       };
 
       const success = await onSave(sessionData, session?.id);
@@ -106,7 +145,7 @@ const SessionModal = ({ open, onClose, onSave, session, loading }) => {
       onCancel={onClose}
       footer={null}
       centered
-      width={520}
+      width={580}
       closeIcon={<X className="w-5 h-5" />}
       title={
         <div className="flex items-center gap-2">
@@ -128,6 +167,43 @@ const SessionModal = ({ open, onClose, onSave, session, loading }) => {
         >
           <Input placeholder="e.g., Final Review Session" size="large" />
         </Form.Item>
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* University */}
+          <Form.Item
+            name="university_id"
+            label="University"
+            rules={[{ required: true, message: "Please select university" }]}
+          >
+            <Select
+              placeholder="Select University"
+              size="large"
+              loading={fetchingData}
+              onChange={() => form.setFieldValue("grade_id", null)}
+              options={universities.map((u) => ({
+                label: u.university_name,
+                value: u.university_id,
+              }))}
+            />
+          </Form.Item>
+
+          {/* Grade */}
+          <Form.Item
+            name="grade_id"
+            label="Grade"
+            rules={[{ required: true, message: "Please select grade" }]}
+          >
+            <Select
+              placeholder="Select Grade"
+              size="large"
+              disabled={!selectedUniversityId}
+              options={grades.map((g) => ({
+                label: g.grade_name,
+                value: g.grade_id,
+              }))}
+            />
+          </Form.Item>
+        </div>
 
         {/* Topic */}
         <Form.Item
@@ -270,44 +346,46 @@ const SessionModal = ({ open, onClose, onSave, session, loading }) => {
 
         <Divider className="my-4" />
 
-        {/* Address */}
-        <Form.Item
-          name="address"
-          label="Location / Address"
-          rules={[
-            { required: true, message: "Please enter location" },
-            { min: 3, message: "Location must be at least 3 characters" },
-          ]}
-        >
-          <Input placeholder="e.g., Cairo Hall 5" size="large" />
-        </Form.Item>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Address */}
+          <Form.Item
+            name="address"
+            label="Location / Address"
+            rules={[
+              { required: true, message: "Please enter location" },
+              { min: 3, message: "Location must be at least 3 characters" },
+            ]}
+          >
+            <Input placeholder="e.g., Cairo Hall 5" size="large" />
+          </Form.Item>
 
-        {/* Student Limit */}
-        <Form.Item
-          name="student_limit"
-          label="Student Limit"
-          rules={[
-            { required: true, message: "Please enter student limit" },
-            {
-              type: "number",
-              min: 1,
-              message: "Minimum 1 student",
-            },
-            {
-              type: "number",
-              max: 500,
-              message: "Maximum 500 students",
-            },
-          ]}
-        >
-          <InputNumber
-            className="w-full!"
-            size="large"
-            min={1}
-            max={500}
-            placeholder="e.g., 30"
-          />
-        </Form.Item>
+          {/* Student Limit */}
+          <Form.Item
+            name="student_limit"
+            label="Student Limit"
+            rules={[
+              { required: true, message: "Please enter student limit" },
+              {
+                type: "number",
+                min: 1,
+                message: "Minimum 1 student",
+              },
+              {
+                type: "number",
+                max: 500,
+                message: "Maximum 500 students",
+              },
+            ]}
+          >
+            <InputNumber
+              className="w-full!"
+              size="large"
+              min={1}
+              max={500}
+              placeholder="e.g., 30"
+            />
+          </Form.Item>
+        </div>
 
         {/* Actions */}
         <div className="flex justify-end gap-3 pt-4 border-t mt-6">

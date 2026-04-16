@@ -25,7 +25,10 @@ const Header = ({ onMenuClick, isMobile }) => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
+    <header
+      className="bg-white border-b border-gray-200 sticky top-0 z-30"
+      style={{ transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}
+    >
       <div className="flex items-center justify-between h-14 sm:h-16 landscape:h-12 px-4 sm:px-6">
         {/* Left Side */}
         <div className="flex items-center gap-3 sm:gap-4">
