@@ -25,6 +25,7 @@
   --color-error: var(--error);
 
   --font-family-inter: var(--font-family-inter);
+  --breakpoint-xs: 480px;
 }
 
 /* ========== Base Styles ========== */
@@ -146,7 +147,9 @@
 }
 
 /* Ensure all buttons have appearance reset for iOS */
-.ant-btn, .ant-btn-primary, .ant-btn-default {
+.ant-btn,
+.ant-btn-primary,
+.ant-btn-default {
   -webkit-appearance: none;
   background-origin: border-box;
 }

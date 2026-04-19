@@ -184,7 +184,7 @@ const SessionCard = ({ session, onEdit, onDelete }) => {
             trigger={["click"]}
             placement="bottomRight"
           >
-            <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors opacity-0 group-hover:opacity-100">
+            <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <MoreVertical className="w-5 h-5 text-gray-500" />
             </button>
           </Dropdown>
